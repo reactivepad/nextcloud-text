@@ -189,7 +189,11 @@ class DocumentService {
 	 * @throws VersionMismatchException
 	 */
 	public function addStep($documentId, $sessionId, $steps, $version): array {
-		// TODO check cache
+		if (!$this->cache->get('document-push-lock-' . $documentId)) {
+			throw new VersionMismatchException('Version does not match');
+		}
+		$this->cache->set('document-save-lock-' . $documentId, true, 10);
+
 		$document = $this->documentMapper->find($documentId);
 		if ($version !== $document->getCurrentVersion()) {
 			throw new VersionMismatchException('Version does not match');
@@ -207,6 +211,8 @@ class DocumentService {
 		$newVersion = $document->getCurrentVersion() + count($steps);
 		$document->setCurrentVersion($newVersion);
 		$this->documentMapper->update($document);
+		// DEBUG
+		// there might be a race condition here where the version is updated w
 		$step = new Step();
 		$step->setData($stepsJson);
 		$step->setSessionId($sessionId);
@@ -216,6 +222,7 @@ class DocumentService {
 		$this->cache->set('document-version-'.$document->getId(), $newVersion);
 		// TODO restore old version for document if adding steps has failed
 		// TODO write steps to cache for quicker reading
+		$this->cache->remove('document-push-lock-' . $documentId);
 		return $steps;
 	}
 
@@ -280,7 +287,7 @@ class DocumentService {
 			// Ignore lock since it might occur when multiple people save at the same time
 			return $document;
 		}
-		$document->setLastSavedVersion($version);
+		$document->setLastSavedVersion($document->getCurrentVersion());
 		$document->setLastSavedVersionTime(time());
 		$document->setLastSavedVersionEtag($file->getEtag());
 		$this->documentMapper->update($document);
