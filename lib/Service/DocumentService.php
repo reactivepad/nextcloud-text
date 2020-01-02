@@ -195,6 +195,7 @@ class DocumentService {
 		$this->cache->set('document-save-lock-' . $documentId, true, 10);
 
 		$document = $this->documentMapper->find($documentId);
+
 		if ($version !== $document->getCurrentVersion()) {
 			throw new VersionMismatchException('Version does not match');
 		}
@@ -209,9 +210,10 @@ class DocumentService {
 			}
 		}
 		$newVersion = $document->getCurrentVersion() + count($steps);
+		$this->cache->set('document-version-'.$document->getId(), $newVersion);
 		$document->setCurrentVersion($newVersion);
 		$this->documentMapper->update($document);
-		// DEBUG
+		// FIXME: DEBUG
 		// there might be a race condition here where the version is updated w
 		$step = new Step();
 		$step->setData($stepsJson);
@@ -219,7 +221,6 @@ class DocumentService {
 		$step->setDocumentId($documentId);
 		$step->setVersion($version+1);
 		$this->stepMapper->insert($step);
-		$this->cache->set('document-version-'.$document->getId(), $newVersion);
 		// TODO restore old version for document if adding steps has failed
 		// TODO write steps to cache for quicker reading
 		$this->cache->remove('document-push-lock-' . $documentId);
