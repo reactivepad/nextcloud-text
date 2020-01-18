@@ -150,5 +150,13 @@ export default [
 		action: (command) => {
 			return command.code_block()
 		}
+	},
+	{
+		label: 'Formula',
+		class: 'icon-code',
+		isActive: (isActive) => isActive.code_block(),
+		action: (command) => {
+			return command.reactivepad_formula()
+		}
 	}
 ]

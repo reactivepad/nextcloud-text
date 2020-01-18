@@ -62,6 +62,7 @@
 <script>
 import Vue from 'vue'
 import escapeHtml from 'escape-html'
+import { buildPlugin } from '@reactivepad/prosemirror'
 
 import { SyncService, ERROR_TYPE } from './../services/SyncService'
 import { endpointUrl, getRandomGuestName } from './../helpers'
@@ -70,7 +71,7 @@ import { createEditor, markdownit, createMarkdownSerializer, serializePlainText,
 
 import { EditorContent } from 'tiptap'
 import { Collaboration } from 'tiptap-extensions'
-import { Keymap } from './../extensions'
+import { Keymap, ReactivepadFormula } from './../extensions'
 import isMobile from './../mixins/isMobile'
 
 import Tooltip from 'nextcloud-vue/dist/Directives/Tooltip'
@@ -300,11 +301,14 @@ export default {
 										this.syncService.save()
 										return true
 									}
-								})
+								}),
+								new ReactivepadFormula()
 							],
 							enableRichEditing: this.isRichEditor,
 							languages
 						})
+						this.reactivepadPlugin = buildPlugin()
+						this.tiptap.registerPlugin(this.reactivepadPlugin.plugin)
 						this.syncService.state = this.tiptap.state
 					})
 				})

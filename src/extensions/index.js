@@ -21,7 +21,9 @@
  */
 
 import Keymap from './Keymap'
+import ReactivepadFormula from './ReactivepadFormula'
 
 export {
-	Keymap
+	Keymap,
+	ReactivepadFormula
 }
