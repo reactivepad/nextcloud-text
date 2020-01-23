@@ -1,26 +1,32 @@
 import { Node } from 'tiptap'
-import { NODES_NAMES, nodes, menuItems } from '@reactivepad/prosemirror'
+import { NODES_NAMES, NODES_DATA_ATTRS, nodes, menuItems } from '@reactivepad/prosemirror'
+
+const nodeName = NODES_NAMES.formula
+const node = nodes[nodeName]
+const menuItem = menuItems.find(({ key }) => key === nodeName)
 
 export default class ReactivepadFormula extends Node {
 
 	get name() {
-		return NODES_NAMES.formula
+		return nodeName
 	}
 
 	get schema() {
 		return {
-			...nodes[NODES_NAMES.formula],
+			...node,
 			toMarkdown(state, node) {
 				const { attrs } = node.toJSON()
 				const stringified = JSON.stringify(attrs)
-				const md = `<span data-rp="true" data-rp-attrs='${stringified}'>${attrs.formatted}</span>`
+				const typeAttr = `${NODES_DATA_ATTRS.type}='formula'`
+				const propsAttr = `${NODES_DATA_ATTRS.props}='${stringified}'`
+				const md = `<span ${typeAttr} ${propsAttr}>${attrs.formatted}</span>`
 				state.write(md)
 			}
 		}
 	}
 
 	commands() {
-		return () => menuItems[0].run(this.editor.state, this.editor.view.dispatch)
+		return () => menuItem.run
 	}
 
 }

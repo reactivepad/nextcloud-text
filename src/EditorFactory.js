@@ -99,7 +99,7 @@ const createEditor = ({ content, onInit, onUpdate, extensions, enableRichEditing
 	})
 }
 
-const markdownit = MarkdownIt('commonmark', { html: false, breaks: false })
+const markdownit = MarkdownIt('commonmark', { html: true, breaks: false })
 	.enable('strikethrough')
 
 const SerializeException = function(message) {
