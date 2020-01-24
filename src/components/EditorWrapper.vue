@@ -71,7 +71,7 @@ import { createEditor, markdownit, createMarkdownSerializer, serializePlainText,
 
 import { EditorContent } from 'tiptap'
 import { Collaboration } from 'tiptap-extensions'
-import { Keymap, ReactivepadFormula } from './../extensions'
+import { Keymap, ReactivepadFormula, ReactivepadTable } from './../extensions'
 import isMobile from './../mixins/isMobile'
 
 import Tooltip from 'nextcloud-vue/dist/Directives/Tooltip'
@@ -302,7 +302,8 @@ export default {
 										return true
 									}
 								}),
-								new ReactivepadFormula()
+								new ReactivepadFormula(),
+								new ReactivepadTable()
 							],
 							enableRichEditing: this.isRichEditor,
 							languages

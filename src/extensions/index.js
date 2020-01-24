@@ -22,8 +22,10 @@
 
 import Keymap from './Keymap'
 import ReactivepadFormula from './ReactivepadFormula'
+import ReactivepadTable from './ReactivepadTable'
 
 export {
 	Keymap,
-	ReactivepadFormula
+	ReactivepadFormula,
+	ReactivepadTable
 }

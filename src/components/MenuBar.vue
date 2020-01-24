@@ -36,9 +36,11 @@
 							:key="icon.label"
 							v-click-outside="() => hideChildMenu(icon)"
 							class="submenu">
-							<button :class="childIconClass(isActive, icon.children, )"
+							<button :class="icon.text ? 'text-button' : childIconClass(isActive, icon.children, )"
 								:title="icon.label"
-								@click.prevent="toggleChildMenu(icon)" />
+								@click.prevent="toggleChildMenu(icon)">
+								{{ icon.text }}
+							</button>
 							<div :class="{open: isChildMenuVisible(icon)}" class="popovermenu menu-center">
 								<PopoverMenu :menu="childPopoverMenu(isActive, commands, icon.children, icon)" />
 							</div>
@@ -270,6 +272,11 @@ export default {
 				margin-left: 0;
 			}
 		}
+		@media print {
+			& {
+				display: none;
+			}
+		}
 	}
 
 	.menubar button {
@@ -295,11 +302,14 @@ export default {
 		&.icon-undo, &.icon-redo {
 			opacity: .4;
 		}
+
+		&.text-button {
+			width: auto;
+		}
 	}
 
 	.menubar .submenu {
 		display: inline-block;
-		width: 44px;
 		height: 44px;
 		position: relative;
 		vertical-align: top;

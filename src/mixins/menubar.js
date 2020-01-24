@@ -22,6 +22,26 @@
 
 export default [
 	{
+		label: 'Reactivepad',
+		text: 'Reactivepad',
+		children: [
+			{
+				label: 'Formula',
+				isActive: () => true,
+				action: (command) => {
+					return command.reactivepad_formula()
+				}
+			},
+			{
+				label: 'Table',
+				isActive: () => true,
+				action: (command) => {
+					return command.reactivepad_table()
+				}
+			}
+		]
+	},
+	{
 		label: t('text', 'Undo'),
 		class: 'icon-undo',
 		isActive: (isActive) => {},
@@ -149,14 +169,6 @@ export default [
 		isActive: (isActive) => isActive.code_block(),
 		action: (command) => {
 			return command.code_block()
-		}
-	},
-	{
-		label: 'Formula',
-		class: 'icon-code',
-		isActive: (isActive) => isActive.code_block(),
-		action: (command) => {
-			return command.reactivepad_formula()
 		}
 	}
 ]
